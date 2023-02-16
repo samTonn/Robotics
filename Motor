@@ -8,12 +8,8 @@ Spbornk.PrizmBegin();
 }
 
 void loop() {
-  Spbornk.setMotorPower(1,50);
-  delay(2000);
-  Spbornk.setMotorPower(1,0);
-  delay(500);
-  Spbornk.setMotorSpeed(1,360);
-  delay(2000);
+  Spbornk.setMotorSpeed(1,-180);
+  delay(1000);
   Spbornk.setMotorSpeed(1,0);
-  delay(500);
+  delay(1000);
 }
