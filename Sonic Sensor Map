@@ -1,0 +1,13 @@
+#include <PRIZM.h>
+PRIZM Jack;
+void setup() {
+  Jack.PrizmBegin();
+  Serial.begin(9600);
+}
+
+void loop() {
+  int distance = map(Jack.readSonicSensorCM(4), 0,521 , 0,180);
+  Serial.println(Jack.readSonicSensorCM(4));
+  Serial.println(distance);
+  Jack.setServoPosition(1,distance);
+}
