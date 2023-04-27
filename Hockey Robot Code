@@ -1,0 +1,99 @@
+#include <PRIZM.h>
+#include <TELEOP.h>
+
+PRIZM spback;
+PS4 controller;
+EXPANSION motorExp;
+
+int servoDelayMs = 800;
+int driveDirection = 1;
+int timeBeforeFlipMs = 1000;
+
+void setup() {
+  controller.setDeadZone (LEFT,10);    
+  controller.setDeadZone(RIGHT,10);
+  motorExp.resetEncoder(1, 2);
+  spback.setServoSpeed(1, 100);
+  spback.setServoPosition(1, 5);
+}
+
+void loop() {
+  controller.getPS4();                                 
+
+  //main update loop
+  if(controller.Connected && controller.inRange){
+    reverseDrive();
+    move();
+    intake();
+    timedFlip();
+    letBallThrough();
+    if (controller.Button(UP)){    
+      manualFlip(1);
+    }else if (controller.Button(DOWN)){    
+      manualFlip(-1);
+    }else{
+      flip();
+    }
+  }
+  else{                                         
+    spback.setMotorPowers(0,0);
+    motorExp.setMotorPowers(1,0,0);
+  }
+}
+
+void reverseDrive(){
+  if (controller.Button(SQUARE)){
+    driveDirection *= -1;
+  }
+}
+
+void move(){               
+  spback.setMotorPowers(controller.Motor(RY)*driveDirection, controller.Motor(LY)*driveDirection *-1);
+}
+
+void intake(){
+  motorExp.setMotorPower(1, 1, controller.Motor(L2T));
+}
+
+void timedFlip(){
+  if (controller.Button(R2)){
+    
+    //ball servo
+    spback.setServoPosition(1, 90);
+    delay(servoDelayMs);
+    spback.setServoPosition(1, 5);
+    
+    delay(timeBeforeFlipMs);
+
+    //flipper
+    motorExp.setMotorPower(1, 2, 100);
+    delay(380);
+    motorExp.setMotorPower(1, 2, 0);
+    delay(300);
+  }
+}
+
+void letBallThrough(){
+  if (controller.Button(CIRCLE)){
+    spback.setServoPosition(1, 90);
+    delay(servoDelayMs);
+    spback.setServoPosition(1, 5);
+    delay(300);
+  }
+}
+
+void flip(){ // gear ratio is   40 : 32
+  if (controller.Button(R1)){
+    motorExp.setMotorPower(1, 2, 100);
+    delay(380);
+    motorExp.setMotorPower(1, 2, 0);
+    delay(300);
+    // motorExp.setMotorTarget(1, 2, 360, 1540);
+    // delay(3000);
+    // motorExp.resetEncoder(1, 2);
+  }
+}
+
+void manualFlip(int direction){
+  motorExp.setMotorPower(1, 2, controller.Motor(R2T)*direction*0.2);
+}
