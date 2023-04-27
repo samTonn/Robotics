@@ -6,8 +6,8 @@ PS4 controller;
 EXPANSION motorExp;
 
 int servoDelayMs = 800;
-int driveDirection = 1;
-int timeBeforeFlipMs = 1000;
+int reverse = false;
+int timeBeforeFlipMs = 500;
 
 void setup() {
   spback.PrizmBegin();
@@ -44,12 +44,17 @@ void loop() {
 
 void reverseDrive(){
   if (controller.Button(SQUARE)){
-    driveDirection *= -1;
+    reverse ^= true;
+    delay(300);
   }
 }
 
-void move(){               
-  spback.setMotorPowers(controller.Motor(RY)*driveDirection, controller.Motor(LY)*driveDirection *-1);
+void move(){
+  if (reverse){
+    spback.setMotorPowers(controller.Motor(LY)*-1, controller.Motor(RY));
+  }else{
+    spback.setMotorPowers(controller.Motor(RY), controller.Motor(LY)*-1);
+  }
 }
 
 void intake(){
@@ -96,5 +101,5 @@ void flip(){ // gear ratio is   40 : 32
 }
 
 void manualFlip(int direction){
-  motorExp.setMotorPower(1, 2, controller.Motor(R2T)*direction*0.2);
+  motorExp.setMotorPower(1, 2, controller.Motor(R2T)*direction*0.3);
 }
