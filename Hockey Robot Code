@@ -10,6 +10,7 @@ int driveDirection = 1;
 int timeBeforeFlipMs = 1000;
 
 void setup() {
+  spback.PrizmBegin();
   controller.setDeadZone (LEFT,10);    
   controller.setDeadZone(RIGHT,10);
   motorExp.resetEncoder(1, 2);
@@ -56,7 +57,7 @@ void intake(){
 }
 
 void timedFlip(){
-  if (controller.Button(R2)){
+  if (controller.Button(R1)){
     
     //ball servo
     spback.setServoPosition(1, 90);
@@ -83,7 +84,7 @@ void letBallThrough(){
 }
 
 void flip(){ // gear ratio is   40 : 32
-  if (controller.Button(R1)){
+  if (controller.Button(R2)){
     motorExp.setMotorPower(1, 2, 100);
     delay(380);
     motorExp.setMotorPower(1, 2, 0);
