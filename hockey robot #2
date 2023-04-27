@@ -5,11 +5,12 @@ PRIZM spback;
 PS4 controller;
 EXPANSION motorExp;
 
-int servoDelayMs = 800;
+int servoDelayMs = 760;
 int driveDirection = 1;
-int timeBeforeFlipMs = 1000;
+int timeBeforeFlipMs = 350;
 
 void setup() {
+  spback.PrizmBegin();
   controller.setDeadZone (LEFT,10);    
   controller.setDeadZone(RIGHT,10);
   motorExp.resetEncoder(1, 2);
@@ -28,9 +29,9 @@ void loop() {
     timedFlip();
     letBallThrough();
     if (controller.Button(UP)){    
-      manualFlip(1);
-    }else if (controller.Button(DOWN)){    
       manualFlip(-1);
+    }else if (controller.Button(DOWN)){    
+      manualFlip(1);
     }else{
       flip();
     }
@@ -48,7 +49,7 @@ void reverseDrive(){
 }
 
 void move(){               
-  spback.setMotorPowers(controller.Motor(RY)*driveDirection, controller.Motor(LY)*driveDirection *-1);
+  spback.setMotorPowers(controller.Motor(RY)*driveDirection *-1, controller.Motor(LY)*driveDirection);
 }
 
 void intake(){
@@ -56,18 +57,18 @@ void intake(){
 }
 
 void timedFlip(){
-  if (controller.Button(R2)){
+  if (controller.Button(R1)){
     
     //ball servo
-    spback.setServoPosition(1, 90);
+    spback.setServoPosition(1, 60);
     delay(servoDelayMs);
     spback.setServoPosition(1, 5);
     
     delay(timeBeforeFlipMs);
 
     //flipper
-    motorExp.setMotorPower(1, 2, 100);
-    delay(380);
+    motorExp.setMotorPower(1, 2, -100);
+    delay(600);
     motorExp.setMotorPower(1, 2, 0);
     delay(300);
   }
@@ -75,7 +76,7 @@ void timedFlip(){
 
 void letBallThrough(){
   if (controller.Button(CIRCLE)){
-    spback.setServoPosition(1, 90);
+    spback.setServoPosition(1, 60);
     delay(servoDelayMs);
     spback.setServoPosition(1, 5);
     delay(300);
@@ -83,9 +84,9 @@ void letBallThrough(){
 }
 
 void flip(){ // gear ratio is   40 : 32
-  if (controller.Button(R1)){
-    motorExp.setMotorPower(1, 2, 100);
-    delay(380);
+  if (controller.Button(R2)){
+    motorExp.setMotorPower(1, 2, -100);
+    delay(600);
     motorExp.setMotorPower(1, 2, 0);
     delay(300);
     // motorExp.setMotorTarget(1, 2, 360, 1540);
