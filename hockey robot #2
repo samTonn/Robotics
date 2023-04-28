@@ -5,7 +5,7 @@ PRIZM spback;
 PS4 controller;
 EXPANSION motorExp;
 
-int servoDelayMs = 760;
+int servoDelayMs = 700;
 int reverse = false;
 int timeBeforeFlipMs = 350;
 
@@ -15,7 +15,7 @@ void setup() {
   controller.setDeadZone(RIGHT,10);
   motorExp.resetEncoder(1, 2);
   spback.setServoSpeed(1, 100);
-  spback.setServoPosition(1, 5);
+  spback.setServoPosition(1, 18);
 }
 
 void loop() {
@@ -65,15 +65,15 @@ void timedFlip(){
   if (controller.Button(R1)){
     
     //ball servo
-    spback.setServoPosition(1, 60);
+    spback.setServoPosition(1, 40);
     delay(servoDelayMs);
-    spback.setServoPosition(1, 5);
+    spback.setServoPosition(1, 18);
     
     delay(timeBeforeFlipMs);
 
     //flipper
     motorExp.setMotorPower(1, 2, -100);
-    delay(600);
+    delay(1000);
     motorExp.setMotorPower(1, 2, 0);
     delay(300);
   }
@@ -81,17 +81,17 @@ void timedFlip(){
 
 void letBallThrough(){
   if (controller.Button(CIRCLE)){
-    spback.setServoPosition(1, 50);
+    spback.setServoPosition(1, 40);
     delay(servoDelayMs);
-    spback.setServoPosition(1, 5);
-    delay(300);
+    spback.setServoPosition(1, 18);
+    delay(200);
   }
 }
 
 void flip(){ // gear ratio is   40 : 32
   if (controller.Button(R2)){
     motorExp.setMotorPower(1, 2, -100);
-    delay(600);
+    delay(1000);
     motorExp.setMotorPower(1, 2, 0);
     delay(300);
     // motorExp.setMotorTarget(1, 2, 360, 1540);
@@ -101,5 +101,5 @@ void flip(){ // gear ratio is   40 : 32
 }
 
 void manualFlip(int direction){
-  motorExp.setMotorPower(1, 2, controller.Motor(R2T)*direction*0.3);
+  motorExp.setMotorPower(1, 2, controller.Motor(R2T)*direction*0.5);
 }
