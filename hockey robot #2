@@ -10,6 +10,14 @@ int reverse = false;
 int timeBeforeFlipMs = 330;
 int speed = 100;
 
+
+float lowSpeed = 0.2;
+float medSpeed = 0.5;
+float highSpeed = 1;
+
+float currentSpeed = medSpeed;
+int shift = 2;
+
 void setup() {
   spback.PrizmBegin();
   controller.setDeadZone (LEFT,10);    
@@ -17,6 +25,7 @@ void setup() {
   motorExp.resetEncoder(1, 2);
   spback.setServoSpeed(1, 100);
   spback.setServoPosition(1, 18);
+  controller.setLED(YELLOW);
 }
 
 void loop() {
@@ -25,6 +34,7 @@ void loop() {
   //main update loop
   if(controller.Connected && controller.inRange){
     reverseDrive();
+    shifter();
     move();
     intake();
     timedFlip();
@@ -50,12 +60,37 @@ void reverseDrive(){
   }
 }
 
+//stolen from https://github.com/8BitSky/TetrixCode/blob/main/Shifter%20Introduction
+void shifter(){
+ if(controller.Button(RIGHT)==1 && shift <3){
+   shift++;
+   delay(100);
+ }
+  if(controller.Button(LEFT)==1 && shift >1){
+  shift--;
+  delay(100);
+ }
+ switch (shift) {
+  case 1:
+    currentSpeed = lowSpeed;
+    controller.setLED(GREEN);
+    break;
+  case 2:
+     currentSpeed = medSpeed;
+     controller.setLED(YELLOW);
+     break;
+  case 3:
+     currentSpeed = highSpeed;
+     controller.setLED(RED);
+     break;
+}
+}
+
 void move(){
-  speed = map(controller.Touchpad(TOUCHX), 0, 1920, 0, 1);
   if (reverse){
-    spback.setMotorPowers(floor(controller.Motor(LY)*speed) *-1, floor(controller.Motor(RY)*speed));
+    spback.setMotorPowers(controller.Motor(LY)*currentSpeed, controller.Motor(RY)*currentSpeed *-1);
   }else{
-    spback.setMotorPowers(floor(controller.Motor(RY))*speed, floor(controller.Motor(LY)*speed) *-1);
+    spback.setMotorPowers(controller.Motor(RY)*currentSpeed *-1, controller.Motor(LY)*currentSpeed);
   }
 }
 
