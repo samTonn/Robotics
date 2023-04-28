@@ -5,9 +5,10 @@ PRIZM spback;
 PS4 controller;
 EXPANSION motorExp;
 
-int servoDelayMs = 700;
+int servoDelayMs = 680;
 int reverse = false;
-int timeBeforeFlipMs = 350;
+int timeBeforeFlipMs = 330;
+int speed = 100;
 
 void setup() {
   spback.PrizmBegin();
@@ -50,10 +51,11 @@ void reverseDrive(){
 }
 
 void move(){
+  speed = map(controller.Touchpad(TOUCHX), 0, 1920, 0, 1);
   if (reverse){
-    spback.setMotorPowers(controller.Motor(LY)*-1, controller.Motor(RY));
+    spback.setMotorPowers(floor(controller.Motor(LY)*speed) *-1, floor(controller.Motor(RY)*speed));
   }else{
-    spback.setMotorPowers(controller.Motor(RY), controller.Motor(LY)*-1);
+    spback.setMotorPowers(floor(controller.Motor(RY))*speed, floor(controller.Motor(LY)*speed) *-1);
   }
 }
 
@@ -73,7 +75,7 @@ void timedFlip(){
 
     //flipper
     motorExp.setMotorPower(1, 2, -100);
-    delay(1000);
+    delay(500);
     motorExp.setMotorPower(1, 2, 0);
     delay(300);
   }
@@ -91,7 +93,7 @@ void letBallThrough(){
 void flip(){ // gear ratio is   40 : 32
   if (controller.Button(R2)){
     motorExp.setMotorPower(1, 2, -100);
-    delay(1000);
+    delay(500);
     motorExp.setMotorPower(1, 2, 0);
     delay(300);
     // motorExp.setMotorTarget(1, 2, 360, 1540);
