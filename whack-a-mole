@@ -1,0 +1,50 @@
+#include <Keypad.h>
+
+const int ROW_NUM = 4; //four rows
+const int COLUMN_NUM = 4; //four columns
+
+char keys[ROW_NUM][COLUMN_NUM] = {
+  {'1','2'},
+  {'3','4'},
+  {'5','6'},
+  {'7','8'}
+};
+
+byte pin_rows[ROW_NUM] = {A2,A3,A4,A5}; //connect to the row pinouts of the keypad
+byte pin_column[COLUMN_NUM] = {A0,A1}; //connect to the column pinouts of the keypad
+
+Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
+
+
+
+void setup(){
+  Serial.begin(9600);
+  for (int i=1; i<=8; i++){
+      pinMode(i, OUTPUT);
+      digitalWrite(i, LOW);
+  }
+}
+
+void loop(){
+  int molePos = 5;//random(1,8);
+  digitalWrite(molePos, HIGH);
+  
+  
+  
+  int key = keypad.waitForKey(); // char gives 53, not 5. convert from character value to integer somehow
+  Serial.println(key);
+    if (key == molePos){
+      digitalWrite(molePos, LOW);
+      delay(1000);
+      digitalWrite(molePos, HIGH);
+      delay(1000);
+      digitalWrite(molePos, LOW);
+      delay(1000);
+      digitalWrite(molePos, HIGH);
+      delay(200);
+      digitalWrite(molePos, LOW);
+      delay(200);
+      
+    
+  }
+}
