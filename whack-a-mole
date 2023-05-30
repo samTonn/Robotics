@@ -31,9 +31,11 @@ void loop(){
   
   
   
-  int key = keypad.waitForKey(); // char gives 53, not 5. convert from character value to integer somehow
+  char key = keypad.waitForKey(); // char gives 53, not 5. convert from character value to integer somehow
   Serial.println(key);
-    if (key == molePos){
+  int intkey = key-"0");
+  Serial.println(intkey);
+    if (intkey == molePos){
       digitalWrite(molePos, LOW);
       delay(1000);
       digitalWrite(molePos, HIGH);
